@@ -1,6 +1,6 @@
 lane :remote_scan do
     puts("foo")
-    id = '5c0c1f12dd06c'
+    id = '5c0c4b9b6107e'
 
     download_file(
         url: "http://remote-fastlane.betamo.de/uploads/#{id}", 
