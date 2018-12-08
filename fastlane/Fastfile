@@ -1,9 +1,8 @@
 lane :remote_scan do
-    puts("foo")
-    id = '5c0c4b9b6107e'
+    upload_id = ENV['UPLOAD_ID']
 
     download_file(
-        url: "http://remote-fastlane.betamo.de/uploads/#{id}", 
+        url: "http://remote-fastlane.betamo.de/uploads/#{upload_id}", 
         destination_path: './tmp/archive.zip'
     )
     unzip(

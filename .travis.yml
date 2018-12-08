@@ -1,7 +1,8 @@
 language: ruby
 os: osx
-rvm:
- - 2.2
+
+env:
+  - UPLOAD_ID=5c0c4b9b6107e
 
 install: |
   bundle install
