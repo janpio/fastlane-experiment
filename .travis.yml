@@ -1,0 +1,9 @@
+language: ruby
+os: osx
+rvm:
+ - 2.2
+
+install: |
+  bundle install
+
+script: bundle exec fastlane remote_scan --verbose
