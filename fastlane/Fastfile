@@ -1,0 +1,26 @@
+lane :remote_scan do
+    puts("foo")
+    id = '5c0c1f12dd06c'
+
+    download_file(
+        url: "http://remote-fastlane.betamo.de/uploads/#{id}", 
+        destination_path: './tmp/archive.zip'
+    )
+    unzip(
+        file: "./tmp/archive.zip", 
+        destination_path: "./tmp/app/"
+    )
+    test
+end
+
+lane :test do
+    #puts Dir.pwd
+    #Dir.chdir("../tmp/app/iosapp") do
+        #puts Dir.pwd
+        #puts Dir["./*.xcodeproj"]
+        run_tests(
+            project: "tmp/app/iosapp/iosapp.xcodeproj",
+            device: "iPhone 5s"
+        )
+    #end
+end
