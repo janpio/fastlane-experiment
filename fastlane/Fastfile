@@ -1,4 +1,7 @@
-lane :remote_action do
+lane :remote_action |options| do
+
+    ENV['CI_PROVIDER'] = options['ci'] if options['ci']
+    
     # TODO Check if required ENV vars are set, exit if not
     action = ENV['ACTION']
     if action == 'scan'

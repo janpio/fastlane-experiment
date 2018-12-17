@@ -1,0 +1,28 @@
+jobs:
+- job: macOS
+  pool:
+    vmImage: 'macOS-10.13'
+  steps:
+
+  - script: |
+      cd ios
+      bundle install --retry=3 --jobs=4
+    displayName: 'bundle install'
+
+  - script: |
+      cd ios
+      brew update && brew install imagemagick
+    displayName: 'brew update && brew install imagemagick'
+
+  - script: |
+      cd ios
+      bundle exec fastlane -v
+    displayName: 'bundle exec fastlane -v'
+
+  - script: |
+      bundle exec fastlane remote_action ci:azure --verbose
+    displayName: 'bundle exec fastlane remote_action ci:azure --verbose'
+    env:
+      FASTLANE_PASSWORD: $(FASTLANE_PASSWORD)
+      FASTLANE_SESSION: $(FASTLANE_SESSION)
+
