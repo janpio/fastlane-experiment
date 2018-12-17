@@ -3,8 +3,10 @@ lane :remote_action do
     action = ENV['ACTION']
     if action == 'scan'
         remote_scan
+    elsif action == 'snapshot'
+        remote_snapshot
     else
-        UI.user_error!("Don't know how to handle this action.")
+        UI.user_error!("Don't know how to handle action '#{action}'.")
     end
 end
 
@@ -29,7 +31,32 @@ lane :test do
         #puts Dir["./*.xcodeproj"]
         run_tests(
             project: "tmp/app/iosapp.xcodeproj", # TODO Find correct path automatically
-            device: "iPhone 5s"
+            device: "iPhone 5s" # TODO from params
         )
     #end
+end
+
+lane :remote_snapshot do
+    upload_id = ENV['UPLOAD_ID']
+
+    download_file(
+        url: "http://remote-fastlane.betamo.de/uploads/#{upload_id}", 
+        destination_path: './tmp/archive.zip'
+    )
+    unzip(
+        file: "./tmp/archive.zip", 
+        destination_path: "./tmp/app/"
+    )
+    screenshot
+    # TODO zip screenshots
+    # TODO upload screenshots
+    # TODO output upload_id
+end
+
+lane :screenshot do
+    capture_ios_screenshots(
+        project: "tmp/app/iosapp.xcodeproj", # TODO Find correct path automatically
+        device: "iPhone 5s", # TODO from params
+        languages: ["en-US", "de-DE"]  # TODO from params
+    )
 end
