@@ -51,9 +51,19 @@ lane :remote_snapshot do
         destination_path: "./tmp/app/"
     )
     screenshot
-    # TODO zip screenshots
-    # TODO upload screenshots
-    # TODO output upload_id
+    
+    screenshots_dir = 'screenshots'
+    archive_filename = 'screenshots.zip'
+    
+    # zip screenshots
+    zf = ZipFileGenerator.new(screenshots_dir, archive_filename)
+    zf.write()
+    
+    # upload screenshots.zip
+    upload_id = upload_file(archive_filename)
+   
+    # output upload_id
+    puts "<UPLOAD_ID>#{upload_id}</UPLOAD_ID>"
 end
 
 lane :screenshot do
@@ -62,4 +72,69 @@ lane :screenshot do
         devices: ["iPhone 5s"], # TODO from params
         languages: ["en-US", "de-DE"]  # TODO from params
     )
+end
+
+
+
+##############################################################
+
+def self.upload_file(filename)
+  require 'net/http/post/multipart'
+
+  url = URI.parse('http://remote-fastlane.betamo.de/upload.php')
+  File.open(filename) do |file|
+    req = Net::HTTP::Post::Multipart.new url.path,
+    "datei" => UploadIO.new(file, "application/zip", filename)
+    res = Net::HTTP.start(url.host, url.port) do |http|
+    return http.request(req).body
+    end
+  end
+end
+
+require 'zip'
+
+# This is a simple example which uses rubyzip to
+# recursively generate a zip file from the contents of
+# a specified directory. The directory itself is not
+# included in the archive, rather just its contents.
+#
+# Usage:
+#   directoryToZip = "/tmp/input"
+#   outputFile = "/tmp/out.zip"
+#   zf = ZipFileGenerator.new(directoryToZip, outputFile)
+#   zf.write()
+class ZipFileGenerator
+
+# Initialize with the directory to zip and the location of the output archive.
+def initialize(inputDir, outputFile)
+  @inputDir = inputDir
+  @outputFile = outputFile
+end
+
+# Zip the input directory.
+def write()
+  #entries = Dir.entries(@inputDir); entries.delete("."); entries.delete("..")
+  entries = Dir.entries(@inputDir).reject { |f| f =~ /\.$|\.git|\.zip/ } # via https://stackoverflow.com/a/12342439/252627
+  io = Zip::File.open(@outputFile, Zip::File::CREATE);
+
+  writeEntries(entries, "", io)
+  io.close();
+end
+
+# A helper method to make the recursion work.
+private
+def writeEntries(entries, path, io)
+  entries.each { |e|
+    zipFilePath = path == "" ? e : File.join(path, e)
+    diskFilePath = File.join(@inputDir, zipFilePath)
+    #puts "Deflating " + diskFilePath
+    if  File.directory?(diskFilePath)
+      io.mkdir(zipFilePath)
+      subdir =Dir.entries(diskFilePath); subdir.delete("."); subdir.delete("..")
+      writeEntries(subdir, zipFilePath, io)
+    else
+      io.get_output_stream(zipFilePath) { |f| f.puts(File.open(diskFilePath, "rb").read())}
+    end
+  } 
+  end
 end
