@@ -4,7 +4,7 @@ lane :remote_action do
     if action == 'scan'
         remote_scan
     else
-        puts "Don't know how to handle this action."
+        UI.user_error!("Don't know how to handle this action.")
     end
 end
 
