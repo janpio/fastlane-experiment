@@ -1,4 +1,5 @@
-lane :remove_action do
+lane :remote_action do
+    # TODO Check if required ENV vars are set, exit if not
     action = ENV['ACTION']
     if action == 'scan'
         remote_scan
