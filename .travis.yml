@@ -3,8 +3,9 @@ os: osx
 
 env:
   - UPLOAD_ID=5c0c4b9b6107e # TODO remove
+  - ACTION=scan
 
 install: |
   bundle install
 
-script: bundle exec fastlane remote_scan --verbose
+script: bundle exec fastlane remote_action --verbose
