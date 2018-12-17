@@ -58,7 +58,7 @@ end
 
 lane :screenshot do
     capture_ios_screenshots(
-        project: "tmp/app/iosapp/iosapp.xcodeproj", # TODO Find correct path automatically
+        project: "tmp/app/iosapp_with_snapshot/iosapp.xcodeproj", # TODO Find correct path automatically
         devices: ["iPhone 5s"], # TODO from params
         languages: ["en-US", "de-DE"]  # TODO from params
     )
