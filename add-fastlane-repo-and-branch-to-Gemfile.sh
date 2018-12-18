@@ -10,5 +10,5 @@ if [ -n "$REPO" ] && [ -n "$BRANCH" ]; then
     echo "$REPLACE"
     SEDSTRING="s@$SEARCH@$REPLACE@"
     echo "$SEDSTRING"
-    sed -i "$SEDSTRING" Gemfile
+    sed -i -e "$SEDSTRING" Gemfile
 fi
