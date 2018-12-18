@@ -4,6 +4,11 @@ jobs:
     vmImage: 'macOS-10.13'
   steps:
 
+  - task: ShellScript@2
+    inputs:
+      scriptPath: ./add-fastlane-repo-and-branch-to-Gemfile.sh
+    displayName: 'add fastlane repo+branch to Gemfile (if present as env var)'
+
   - script: |
       cd ios
       bundle install --retry=3 --jobs=4
