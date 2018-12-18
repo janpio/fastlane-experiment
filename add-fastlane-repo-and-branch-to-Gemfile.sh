@@ -7,5 +7,7 @@ if [ -n "$REPO" ] && [ -n "$BRANCH" ]; then
     echo "$SEARCH"
     REPLACE="gem \"fastlane\", :git => \"$REPO\", :branch => \"$BRANCH\""
     echo "$REPLACE"
-    sed -i "s@$SEARCH@$REPLACE@" Gemfile
+    SEDSTRING="s@$SEARCH@$REPLACE@"
+    echo "$SEDSTRING"
+    sed -i "$SEDSTRING" Gemfile
 fi
