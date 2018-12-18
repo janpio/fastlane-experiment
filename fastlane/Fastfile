@@ -1,6 +1,6 @@
 lane :remote_action do |options|
 
-    ENV['CI_PROVIDER'] = options['ci'] if options['ci']
+    ENV['CI_PROVIDER'] = options['ci'] if options['ci'] # TODO remove?
 
     # TODO Check if required ENV vars are set, exit if not
     action = ENV['ACTION']
@@ -8,6 +8,8 @@ lane :remote_action do |options|
         remote_scan
     elsif action == 'snapshot'
         remote_snapshot
+      elsif action == 'gym'
+        remote_gym
     else
         UI.user_error!("Don't know how to handle action '#{action}'.")
     end
@@ -72,6 +74,26 @@ lane :screenshot do
         devices: ["iPhone 5s"], # TODO from params
         languages: ["en-US", "de-DE"]  # TODO from params
     )
+end
+
+lane :remote_gym do
+  upload_id = ENV['UPLOAD_ID']
+
+  download_file(
+      url: "http://remote-fastlane.betamo.de/uploads/#{upload_id}", 
+      destination_path: './tmp/archive.zip'
+  )
+  unzip(
+      file: "./tmp/archive.zip", 
+      destination_path: "./tmp/app/"
+  )
+  build
+end
+
+lane :build do
+  gym(
+      project: "tmp/app/iosapp.xcodeproj" # TODO Find correct path automatically
+  )
 end
 
 
