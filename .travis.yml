@@ -2,7 +2,7 @@ language: ruby
 os: osx
 
 before_install: |
-  sh add-fastlane-repo-and-branch-to-Gemfile.sh
+  ./add-fastlane-repo-and-branch-to-Gemfile.sh
 
 install: |
   bundle install
