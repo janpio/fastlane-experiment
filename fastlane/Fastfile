@@ -92,7 +92,7 @@ end
 
 lane :build do
   gym(
-      project: "tmp/app/iosapp.xcodeproj" # TODO Find correct path automatically
+      project: "tmp/app/iosapp_with_snapshot/iosapp.xcodeproj" # TODO Find correct path automatically
   )
 end
 
